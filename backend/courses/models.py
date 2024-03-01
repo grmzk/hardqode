@@ -23,6 +23,16 @@ class Course(models.Model):
         on_delete=models.CASCADE,
         blank=False,
     )
+    min_group_students = models.PositiveIntegerField(
+        verbose_name='Min Students In Group',
+        blank=False,
+        default=0,
+    )
+    max_group_students = models.PositiveIntegerField(
+        verbose_name='Max Students In Group',
+        blank=False,
+        default=1,
+    )
 
     class Meta:
         verbose_name = 'Course'
