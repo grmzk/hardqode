@@ -143,3 +143,8 @@ REST_FRAMEWORK = {
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
+
+SPECTACULAR_SETTINGS = {
+    'SERVE_INCLUDE_SCHEMA': False,
+    'TITLE': 'HardQode Test Task',
+}
