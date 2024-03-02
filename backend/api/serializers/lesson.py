@@ -11,3 +11,11 @@ class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ['id', 'name', 'url', 'course']
         model = Lesson
+
+    @staticmethod
+    def validate_name(name):
+        if Lesson.objects.filter(name=name).count():
+            raise serializers.ValidationError(
+                'This name is already exists.'
+            )
+        return name

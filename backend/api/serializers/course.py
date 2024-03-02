@@ -25,3 +25,11 @@ class CourseSerializer(serializers.ModelSerializer):
                 'than or equal to min_group_students'
             )
         return attrs
+
+    @staticmethod
+    def validate_name(name):
+        if Course.objects.filter(name=name).count():
+            raise serializers.ValidationError(
+                'This name is already exists.'
+            )
+        return name

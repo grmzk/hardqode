@@ -14,3 +14,11 @@ class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ['id', 'name', 'course', 'students']
         model = Group
+
+    @staticmethod
+    def validate_name(name):
+        if Group.objects.filter(name=name).count():
+            raise serializers.ValidationError(
+                'This name is already exists.'
+            )
+        return name
