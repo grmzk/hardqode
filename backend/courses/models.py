@@ -26,12 +26,10 @@ class Course(models.Model):
     min_group_students = models.PositiveIntegerField(
         verbose_name='Min Students In Group',
         blank=False,
-        default=0,
     )
     max_group_students = models.PositiveIntegerField(
         verbose_name='Max Students In Group',
         blank=False,
-        default=1,
     )
 
     class Meta:
@@ -41,6 +39,21 @@ class Course(models.Model):
 
     def __str__(self):
         return f'Course[{self.name}]'
+
+    def add_student(self, student: Student):
+        groups = list(self.study_groups.all())
+        for i in range(len(groups)):
+            if groups[i].students.count() < self.min_group_students:
+                groups[i].students.add(student)
+                break
+        else:
+            for i in range(len(groups)):
+                if (groups[i - 1].students.count()
+                        > groups[i].students.count()):
+                    groups[i].students.add(student)
+                    break
+            else:
+                groups[0].students.add(student)
 
 
 class Lesson(models.Model):
