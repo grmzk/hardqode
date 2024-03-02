@@ -33,6 +33,8 @@ docker-compose up --build -d
 docker-compose exec backend python manage.py migrate
 ```
 
+Сервер запускается по адресу 127.0.0.1:8000
+
 ##### Эндпоинты
 
 [Полная документация](http://127.0.0.1:8000/api/docs/)
