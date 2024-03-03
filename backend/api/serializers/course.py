@@ -1,14 +1,14 @@
 from rest_framework import serializers
 
 from courses.models import Course
-from users.models import Author
+from users.models import User
 
 
 class CourseSerializer(serializers.ModelSerializer):
     name = serializers.CharField(max_length=150)
     start_date = serializers.DateTimeField()
     cost = serializers.IntegerField(min_value=0)
-    author = serializers.PrimaryKeyRelatedField(queryset=Author.objects.all())
+    author = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     min_group_students = serializers.IntegerField(min_value=0)
     max_group_students = serializers.IntegerField(min_value=1)
     lessons_count = serializers.IntegerField(read_only=True)

@@ -1,6 +1,6 @@
 from django.db import models
 
-from users.models import Author, Student
+from users.models import User
 
 
 class Course(models.Model):
@@ -17,7 +17,7 @@ class Course(models.Model):
         verbose_name='Cost'
     )
     author = models.ForeignKey(
-        Author,
+        User,
         verbose_name='Author',
         related_name='courses',
         on_delete=models.CASCADE,
@@ -40,7 +40,7 @@ class Course(models.Model):
     def __str__(self):
         return f'Course[{self.name}]'
 
-    def add_student(self, student: Student):
+    def add_student(self, student: User):
         groups = list(self.study_groups.all())
         for i in range(len(groups)):
             if groups[i].students.count() < self.min_group_students:
@@ -99,7 +99,7 @@ class Group(models.Model):
         blank=False,
     )
     students = models.ManyToManyField(
-        Student,
+        User,
         verbose_name='Students',
         related_name='study_groups',
         blank=True,

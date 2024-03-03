@@ -6,34 +6,34 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from courses.models import Course
-from users.models import Student
+from users.models import User
 
-from ..serializers import GroupSerializer, LessonSerializer, StudentSerializer
+from ..serializers import GroupSerializer, LessonSerializer, UserSerializer
 
 
 @extend_schema_view(
-    list=extend_schema(summary='Get all students'),
-    create=extend_schema(summary='Add a new student'),
-    retrieve=extend_schema(summary='Get student by id'),
+    list=extend_schema(summary='Get all users'),
+    create=extend_schema(summary='Add a new user'),
+    retrieve=extend_schema(summary='Get user by id'),
     partial_update=extend_schema(
-        summary='Change student fields by student id'
+        summary='Change user fields by user id'
     ),
-    destroy=extend_schema(summary='Delete student by id'),
+    destroy=extend_schema(summary='Delete user by id'),
     get_course_lessons=extend_schema(
-        summary='Get course lessons that the student has access to'
+        summary='Get course lessons that the user has access to'
     ),
     add_to_course=extend_schema(summary='Add student to course', request=None),
 )
-class StudentViewSet(ModelViewSet):
-    serializer_class = StudentSerializer
+class UserViewSet(ModelViewSet):
+    serializer_class = UserSerializer
     http_method_names = ['get', 'post', 'patch', 'delete']
-    queryset = Student.objects.all()
+    queryset = User.objects.all()
 
     @action(detail=True, methods=['get'],
             url_path=r'get_course_lessons/(?P<course_id>[^/.]+)')
     def get_course_lessons(self, request, pk=None, course_id=None):
         course = get_object_or_404(Course, id=course_id)
-        student = get_object_or_404(Student, id=pk)
+        student = get_object_or_404(User, id=pk)
         if not student.is_course_student(course):
             return Response(status=status.HTTP_406_NOT_ACCEPTABLE,
                             data={'message': f'Student with id {pk} '
@@ -46,7 +46,7 @@ class StudentViewSet(ModelViewSet):
             url_path=r'add_to_course/(?P<course_id>[^/.]+)')
     def add_to_course(self, request, pk=None, course_id=None):
         course = get_object_or_404(Course, id=course_id)
-        student = get_object_or_404(Student, id=pk)
+        student = get_object_or_404(User, id=pk)
         if student.is_course_student(course):
             return Response(status=status.HTTP_409_CONFLICT,
                             data={'message': f'Student with id {pk} '

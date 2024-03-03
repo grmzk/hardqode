@@ -10,18 +10,6 @@ class User(AbstractUser):
         blank=False,
     )
 
-
-class Author(User):
-    class Meta:
-        verbose_name = 'Author'
-        verbose_name_plural = 'Authors'
-        ordering = ['username']
-
-    def __str__(self):
-        return f'Author[{self.username}]'
-
-
-class Student(User):
     class Meta:
         verbose_name = 'Student'
         verbose_name_plural = 'Students'

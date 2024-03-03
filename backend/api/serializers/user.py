@@ -1,14 +1,14 @@
 from rest_framework import serializers
 
-from users.models import Author, User
+from users.models import User
 
 
-class AuthorSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     username = serializers.CharField(max_length=150)
 
     class Meta:
         fields = ['id', 'username']
-        model = Author
+        model = User
 
     @staticmethod
     def validate_username(username):

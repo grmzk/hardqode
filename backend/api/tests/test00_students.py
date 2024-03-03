@@ -5,14 +5,14 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from courses.models import Course, Group, Lesson
-from users.models import Author, Student
+from users.models import User
 
 
 class StudentsGetCourseLessonsTests(APITestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.author = Author.objects.create_user(username='author')
-        cls.student = Student.objects.create_user(username='student')
+        cls.author = User.objects.create_user(username='author')
+        cls.student = User.objects.create_user(username='student')
         cls.course = Course.objects.create(
             name='course',
             start_date=datetime.now(tz=pytz.UTC),
@@ -23,19 +23,19 @@ class StudentsGetCourseLessonsTests(APITestCase):
         )
 
     def test_student_404(self):
-        response = self.client.get(f'/api/students/{self.student.id + 1}'
+        response = self.client.get(f'/api/users/{self.student.id + 1}'
                                    f'/get_course_lessons/{self.course.id}/')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_course_404(self):
         response = self.client.get(
-            f'/api/students/{self.student.id}'
+            f'/api/users/{self.student.id}'
             f'/get_course_lessons/{self.course.id + 1}/'
         )
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_alien_student(self):
-        response = self.client.get(f'/api/students/{self.student.id}'
+        response = self.client.get(f'/api/users/{self.student.id}'
                                    f'/get_course_lessons/{self.course.id}/')
         self.assertEqual(response.status_code, status.HTTP_406_NOT_ACCEPTABLE)
 
@@ -45,7 +45,7 @@ class StudentsGetCourseLessonsTests(APITestCase):
             course=self.course,
         )
         group.students.add(self.student)
-        response = self.client.get(f'/api/students/{self.student.id}'
+        response = self.client.get(f'/api/users/{self.student.id}'
                                    f'/get_course_lessons/{self.course.id}/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, [])
@@ -56,7 +56,7 @@ class StudentsGetCourseLessonsTests(APITestCase):
                 url=f'https://example.com/lesson_{i}',
                 course=self.course
             )
-        response = self.client.get(f'/api/students/{self.student.id}'
+        response = self.client.get(f'/api/users/{self.student.id}'
                                    f'/get_course_lessons/{self.course.id}/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), lessons_count)
@@ -65,8 +65,8 @@ class StudentsGetCourseLessonsTests(APITestCase):
 class StudentsAddToCourseTests(APITestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.author = Author.objects.create_user(username='author')
-        cls.student = Student.objects.create_user(username='student')
+        cls.author = User.objects.create_user(username='author')
+        cls.student = User.objects.create_user(username='student')
         cls.course = Course.objects.create(
             name='course',
             start_date=datetime.now(tz=pytz.UTC),
@@ -77,13 +77,13 @@ class StudentsAddToCourseTests(APITestCase):
         )
 
     def test_student_404(self):
-        response = self.client.get(f'/api/students/{self.student.id + 1}'
+        response = self.client.get(f'/api/users/{self.student.id + 1}'
                                    f'/get_course_lessons/{self.course.id}/')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_course_404(self):
         response = self.client.get(
-            f'/api/students/{self.student.id}'
+            f'/api/users/{self.student.id}'
             f'/get_course_lessons/{self.course.id + 1}/'
         )
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
@@ -93,7 +93,7 @@ class StudentsAddToCourseTests(APITestCase):
             name='group',
             course=self.course,
         )
-        response = self.client.post(f'/api/students/{self.student.id}'
+        response = self.client.post(f'/api/users/{self.student.id}'
                                     f'/add_to_course/{self.course.id}/')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertListEqual(list(self.student.study_groups.all()), [group])
@@ -106,11 +106,11 @@ class StudentsAddToCourseTests(APITestCase):
                 course=self.course,
             )
         for i in range(groups_count * self.course.max_group_students):
-            student = Student.objects.create(username=f'student_{i}')
-            response = self.client.post(f'/api/students/{student.id}'
+            student = User.objects.create(username=f'student_{i}')
+            response = self.client.post(f'/api/users/{student.id}'
                                         f'/add_to_course/{self.course.id}/')
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        extra_student = Student.objects.create(username='extra_student')
-        response = self.client.post(f'/api/students/{extra_student.id}'
+        extra_student = User.objects.create(username='extra_student')
+        response = self.client.post(f'/api/users/{extra_student.id}'
                                     f'/add_to_course/{self.course.id}/')
         self.assertEqual(response.status_code, status.HTTP_409_CONFLICT)

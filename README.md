@@ -49,7 +49,7 @@ docker-compose exec backend python manage.py migrate
     ```
 2. Определить, каким образом мы будем понимать, что у пользователя(клиент/студент) есть доступ к продукту. **(2 балл)**
     ```
-    Метод is_course_student класса Student из backend/users/models.py
+    Метод is_course_student класса User из backend/users/models.py
     ```
 3. Создать сущность урока. Урок может принадлежать только одному продукту. В уроке должна быть базовая информация: название, ссылка на видео. **(1 балл)**
    ```
@@ -70,7 +70,7 @@ docker-compose exec backend python manage.py migrate
    ```
    Алгоритм реализован в методе add_student класса Course из backend/users/models.py
    Эндпоинты:
-      /api/students/{id}/add_to_course/{course_id}/
+      /api/users/{id}/add_to_course/{course_id}/
       /api/courses/{id}/rebalance_groups/
    ```
 2. Реализовать API на список продуктов, доступных для покупки, которое бы включало в себя основную информацию о продукте и количество уроков, которые принадлежат продукту. **(2 балла)**
@@ -79,7 +79,7 @@ docker-compose exec backend python manage.py migrate
    ```
 3. Реализовать API с выведением списка уроков по конкретному продукту к которому пользователь имеет доступ. **(1 балл)**.
    ```
-   Эндпоинт /api/students/{id}/get_course_lessons/{course_id}/
+   Эндпоинт /api/users/{id}/get_course_lessons/{course_id}/
    ```
 
 ### Автор
